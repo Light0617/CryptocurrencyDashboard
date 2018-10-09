@@ -5,6 +5,8 @@ import { connect } from 'react-redux';
 import Header from './HeaderComponent';
 import Footer from './FooterComponent';
 import Home from './HomeComponent';
+import Coins from './CoinsComponent';
+import Dashboard from './DashboardComponent';
 
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 
@@ -21,6 +23,21 @@ class Main extends Component {
         />
       );
     }
+
+    const CoinsPage = () => {
+      return (
+        <Coins
+        />
+      );
+    }
+
+    const DashboardPage = () => {
+      return (
+        <Dashboard
+        />
+      );
+    }
+
     return (
       <div class='bodyContent'>
         <Header 
@@ -28,7 +45,9 @@ class Main extends Component {
         <TransitionGroup>
           <CSSTransition>
             <Switch>
-              <Route path='/home' component={HomePage} />
+              <Route path='/home' component={CoinsPage} />
+              <Route path='/coins' component={CoinsPage} />
+              <Route path='/dashboard' component={DashboardPage} />
               <Redirect to='/home' />
             </Switch>
           </CSSTransition>
