@@ -1,0 +1,106 @@
+.row-header {
+  margin: 0px auto;
+  padding: 0px auto; }
+
+.row-content {
+  margin: 0px auto;
+  padding: 50px 0px 50px 0px;
+  border-bottom: 1px ridge;
+  min-height: 400px; }
+
+.footer {
+  background-color: #00050f;
+  color: white;
+  font-family: 'Do Hyeon', sans-serif;
+  margin: 0px auto;
+  padding: 20px 0px 20px 0px; 
+}
+
+.active {
+  background: #010e2c;
+}
+
+.header {
+  background-color: #0b43c7;
+  color: white;
+  font-family: 'Do Hyeon', sans-serif;
+}
+
+address {
+  font-size: 80%;
+  margin: 0px;
+  color: white;
+}
+
+.bodyContent {
+  color: white;
+  font-family: 'Do Hyeon', sans-serif;
+  background-color: #010e2c; 
+}
+
+.navbar-dark {
+  color: white;
+  font-family: 'Do Hyeon', sans-serif;
+  background-color: #00050f; 
+}
+
+.login {
+  background-color: #a4dcea; }
+
+.signup {
+  background-color: #a4dcea; }
+
+.signupButton {
+  color: white; }
+
+.loginButton {
+  color: white; }
+
+.yellow100 {
+  color: #ffc74e; }
+
+.headerBar {
+  color: white; }
+
+h4 {
+  color: white;
+  display: inline; }
+
+.container2 {
+  margin: 0px auto;
+  padding: 30px 30px;
+  width: 98%; }
+
+.page-enter {
+  opacity: 0.01;
+  transform: translateX(-100%); }
+
+.page-enter-active {
+  opacity: 1;
+  transform: translateX(0%);
+  transition: all 300ms ease-in; }
+
+.page-exit {
+  opacity: 1;
+  transform: translateX(0%); }
+
+.page-exit-active {
+  opacity: 0.01;
+  transform: translateX(100%);
+  transition: all 300ms ease-out; }
+
+a:link {
+  text-decoration: none; }
+
+a:active {
+  text-decoration: none; }
+
+a:hover {
+  text-decoration: none !important; }
+
+a:visited {
+  text-decoration: none; }
+
+a:-webkit-any-link {
+  text-decoration: none; }
+
