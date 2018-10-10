@@ -3,9 +3,10 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
 var passport = require('passport');
-var authenticate = require('./authenticate');
-
 const config = require('./config');
+
+const userRouter = require('./routes/userRouter');
+const favoriteCoinRouter = require('./routes/favoriteCoinRouter');
 
 const app = express();
 
@@ -25,11 +26,14 @@ app.get('/', (req, res) => {
   res.end('hello world');
 });
 
+app.use('/users', userRouter);
+app.use('/favorites', favoriteCoinRouter);
+
 
 app.get('*', (req, res) => {
   res.end('hello world');
 });
 
-app.listen(3001, () => {
-  console.log('Example app listening on port 3001!')
+app.listen(3003, () => {
+  console.log('Example app listening on port 3003!')
 })

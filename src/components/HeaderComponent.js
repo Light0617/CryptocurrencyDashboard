@@ -45,13 +45,10 @@ class Header extends Component{
     this.signupToggleModal();
     this.props.signupUser({
       username: this.username.value,
-      password: this.password.value,
-      firstname: this.firstname.value,
-      lastname: this.lastname.value
+      password: this.password.value
     });
     event.preventDefault();
   }
-
 
   handleLogout() {
     this.props.logoutUser();
@@ -69,27 +66,38 @@ class Header extends Component{
             <NavItem>
               <NavLink href="/coins" className = {(this.state.url === 'coins' ? 'active' : 'inactive')}><span className="fa fa-bitcoin fa-lg">Coins</span></NavLink>
             </NavItem>
-            <NavItem>
-              <NavLink href="/dashBoard" className = {(this.state.url === 'dashBoard' ? 'active' : 'inactive')}><span className="fa fa-tachometer fa-lg">DashBoard</span></NavLink>
-            </NavItem>
+            {this.props.auth.isAuthenticated 
+              ? 
+              <NavItem>
+                <NavLink href="/dashboard" className = {(this.state.url === 'dashboard' ? 'active' : 'inactive')}><span className="fa fa-tachometer fa-lg">DashBoard</span></NavLink>
+              </NavItem> 
+              :
+              <NavItem/>
+            }
           </Nav>
           <Nav className='ml-auto'>
-            <NavItem>
-              <Button outline onClick={this.signupToggleModal}><span className="fa fa-user-plus fa-lg signupButton"></span>
-                <span className="signupButton"> Sign up </span>
-              </Button>
-            </NavItem>
-            <NavItem>
-              <Button outline onClick={this.loginToggleModal}><span className="fa fa-sign-in fa-lg loginButton"></span>
-                <span className="loginButton"> Login </span>
-              </Button>
-            </NavItem>
-            <NavItem>
-              {/* <h4>{this.props.auth.user.username}, &emsp;</h4> */}
-              <Button outline onClick={this.handleLogout}>
-                <span className="fa fa-sign-out fa-lg">Logout</span> 
-              </Button>
-            </NavItem>
+            {!this.props.auth.isAuthenticated
+            ?
+              <Nav>
+                <NavItem>
+                  <Button outline onClick={this.signupToggleModal}><span className="fa fa-user-plus fa-lg signupButton"></span>
+                    <span className="signupButton"> Sign up </span>
+                  </Button>
+                </NavItem>
+                <NavItem>
+                  <Button outline onClick={this.loginToggleModal}><span className="fa fa-sign-in fa-lg loginButton"></span>
+                    <span className="loginButton"> Login </span>
+                  </Button>
+                </NavItem>
+              </Nav>
+              :
+              <NavItem>
+                <h4>{this.props.auth.user.username}, &emsp;</h4>
+                <Button outline onClick={this.handleLogout}>
+                  <span className="fa fa-sign-out fa-lg">Logout</span> 
+                </Button>
+              </NavItem>
+            }
           </Nav>
         </Navbar>
 

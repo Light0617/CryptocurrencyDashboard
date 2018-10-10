@@ -8,11 +8,26 @@ import Home from './HomeComponent';
 import Coins from './CoinsComponent';
 import Dashboard from './DashboardComponent';
 
+import { loginUser, logoutUser, signupUser } from '../redux/ActionCreators';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
+
+const mapStateToProps = state => {
+  return {
+    auth: state.auth
+  }
+}
+
+const mapDispatchToProps = dispatch => ({
+  signupUser: (creds) => dispatch(signupUser(creds)),
+  loginUser: (creds) => dispatch(loginUser(creds)),
+  logoutUser: () => dispatch(logoutUser())
+});
 
 class Main extends Component { 
   constructor(props) {
     super(props);
+  }
+  componentDidMount() {
   }
 
   render() {
@@ -39,12 +54,16 @@ class Main extends Component {
     }
 
     return (
-      <div class='bodyContent'>
+      <div className='bodyContent'>
         <Header 
+          auth = {this.props.auth}
+          loginUser={this.props.loginUser}
+          logoutUser={this.props.logoutUser}
+          signupUser={this.props.signupUser}
         />
         <TransitionGroup>
-          <CSSTransition>
-            <Switch>
+          <CSSTransition key={this.props.location.key} classNames="page" timeout={250}>
+            <Switch location={this.props.location}>
               <Route path='/home' component={CoinsPage} />
               <Route path='/coins' component={CoinsPage} />
               <Route path='/dashboard' component={DashboardPage} />
@@ -58,4 +77,4 @@ class Main extends Component {
   }
 }
 
-export default Main;
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Main));
