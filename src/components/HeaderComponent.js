@@ -7,7 +7,6 @@ import {
   Form, FormGroup, Input, Label
 } from 'reactstrap';
 import React, { Component } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 class Header extends Component{ 
   constructor(props) {
@@ -108,13 +107,6 @@ class Header extends Component{
                 <Input type="password" id="password" name="password"
                   innerRef={(input) => this.password = input} />
               </FormGroup>
-              <FormGroup check>
-                <Label check>
-                  <Input type="checkbox" name="remember"
-                    innerRef={(input) => this.remember = input} />
-                  Remember me
-                </Label>
-              </FormGroup>
               <Button type="submit" value="submit" color="primary">Login</Button>
             </Form>
           </ModalBody>
@@ -133,23 +125,6 @@ class Header extends Component{
                 <Label htmlFor="password">Password</Label>
                 <Input type="password" id="password" name="password"
                   innerRef={(input) => this.password = input} />
-              </FormGroup>
-              <FormGroup>
-                <Label htmlFor="firstname">First Name</Label>
-                <Input type="text" id="firstname" name="firstname"
-                  innerRef={(input) => this.firstname = input} />
-              </FormGroup>
-              <FormGroup>
-                <Label htmlFor="lastname">Last Name</Label>
-                <Input type="text" id="lastname" name="lastname"
-                  innerRef={(input) => this.lastname = input} />
-              </FormGroup>
-              <FormGroup check>
-                <Label check>
-                  <Input type="checkbox" name="remember"
-                    innerRef={(input) => this.remember = input} />
-                  Remember me
-                </Label>
               </FormGroup>
               <Button type="submit" value="submit" color="primary">Sign up</Button>
             </Form>
