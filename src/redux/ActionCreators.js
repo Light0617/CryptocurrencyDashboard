@@ -1,5 +1,6 @@
 import * as ActionTypes from './ActionTypes';
 import { baseUrl } from '../shared/baseUrl';
+import {fetchFavorites, favoritesFailed} from './Actions/Favorites.js';
 
 /**
  * Signup
@@ -58,6 +59,7 @@ export const signupUser = (creds) => (dispatch) => {
       localStorage.setItem('token', response.token);
       localStorage.setItem('creds', JSON.stringify(userInfo));
       dispatch(receiveSignup(response));
+      dispatch(fetchFavorites());
     } else {
       var error = new Error('Error ' + response.status);
       error.response = response;
@@ -122,6 +124,7 @@ export const loginUser = (creds) => (dispatch) => {
       localStorage.setItem('creds', JSON.stringify(creds));
       // Dispatch the success action
       dispatch(receiveLogin(response));
+      dispatch(fetchFavorites());
     } else {
       var error = new Error('Error ' + response.status);
       error.response = response;
@@ -152,4 +155,5 @@ export const logoutUser = () => (dispatch) => {
   localStorage.removeItem('token');
   localStorage.removeItem('creds');
   dispatch(receiveLogout());
+  dispatch(favoritesFailed('Error 401: Unauthorized'));
 }

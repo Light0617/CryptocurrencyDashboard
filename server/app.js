@@ -6,7 +6,7 @@ var passport = require('passport');
 const config = require('./config');
 
 const userRouter = require('./routes/userRouter');
-const favoriteCoinRouter = require('./routes/favoriteCoinRouter');
+const favoriteRouter = require('./routes/favoriteRouter');
 
 const app = express();
 
@@ -27,7 +27,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/users', userRouter);
-app.use('/favorites', favoriteCoinRouter);
+app.use('/favorites', favoriteRouter);
 
 
 app.get('*', (req, res) => {

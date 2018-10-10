@@ -55,7 +55,6 @@ class Header extends Component{
   }
 
   render(){
-    console.log(this.state.url);
     return (
       <React.Fragment>
         <Navbar dark expand="md" className='headerBar'>

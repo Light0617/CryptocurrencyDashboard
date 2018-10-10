@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const User = require('../models/user');
+const Favorites = require('../models/favorite');
 const passport = require('passport');
 const authenticate = require('../authenticate');
 
@@ -32,6 +33,12 @@ router.post('/signup', cors.cors, (req, res, next) => {
         }
         passport.authenticate('local')(req, res, () => {
           console.log('userId2 = ' + JSON.stringify(req.user._id));
+          Favorites.create({user: req.user._id})
+            .then((favorite) => {
+              console.log('favorite created!');
+              console.log('favorite= ' + JSON.stringify(favorite));
+            })
+            .catch((err) => next(err));
           var token = authenticate.getToken({_id: req.user._id});  
           console.log('token= ' + JSON.stringify(token));
           res.statusCode = 200;
