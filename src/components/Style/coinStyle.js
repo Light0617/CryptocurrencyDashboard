@@ -4,12 +4,13 @@ import {
   subtleBoxShadow,
   greenBoxShadow,
   redBoxShadow,
-  lightBlueBackground
+  lightBlueBackground,
+  fontSizeBig
 } from './style.js';
 
 export const CoinGrid = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  grid-template-columns: auto auto auto auto auto;
   grid-gap: 15px;
   margin-top: 40px;
 `;
@@ -65,4 +66,23 @@ export const DeleteIcon = styled.div`
     display: block;
     color: red;
   }
+`;
+
+export const ChangePct = styled.div`
+  color: green;
+  ${props =>
+    props.red &&
+    css`
+      color: red;
+    `};
+`;
+
+export const TickerPrice = styled.div`
+${fontSizeBig};
+`;
+
+export const PaddingBlue = styled.div`
+  ${subtleBoxShadow} 
+  ${lightBlueBackground}
+	padding: 10px;
 `;

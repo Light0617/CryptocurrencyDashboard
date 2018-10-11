@@ -1,5 +1,6 @@
 import React , {Component} from 'react';
-import { CoinTile,CoinGrid } from './Style/coinStyle.js';
+import { CoinTile } from './Style/coinStyle.js';
+import { Card } from 'reactstrap';
 import { SearchContainer, SearchInput } from './Style/search.js';
 import _ from 'lodash';
 import { Loading } from './Unit/LoadingComponent';
@@ -13,38 +14,60 @@ function FavoritesCoinList({favorites, coins, deleteFavorite}) {
     const keys = favorites.favorites.coinKeys;
     const coinList = keys.map((coinKey) => {
       return (
-        <CoinTile 
-          onClick={() => deleteFavorite(coinKey)}>
-          <CoinHead coin={coins[coinKey]} />
-        </CoinTile>
+        <div className="col-12 col-md-2" key={coinKey} margin-bottom='20px'>
+          <Card>
+            <CoinTile onClick={() => deleteFavorite(coinKey)}>
+              <CoinHead coin={coins[coinKey]} />
+            </CoinTile>
+          </Card>
+        </div>
       );
     });
     return (
-      <CoinGrid>{coinList}</CoinGrid>
+      <div className="row">{coinList}</div>
     );
   }
 }
 
-function AllCoinList ({loading, favorites, coins, filteredCoinKeys, postFavorite}) {
+function AllCoinList ({loading, favorites, coins, filteredCoinKeys, postFavorite, isAuthenticated}) {
   function checkInFavorite(coinKey, favoritekeys) {
     return _.includes(favoritekeys, coinKey);
   }
 
-  if(loading || !favorites.favorites) {
+  if(loading || (isAuthenticated && !favorites.favorites)) {
     return ( <Loading/> );
+  } else if(!isAuthenticated){
+    const coinList = filteredCoinKeys.map((coinKey) => {
+      return (
+        <div className="col-12 col-md-2" key={coinKey} margin-bottom='20px'>
+          <Card>
+            <CoinTile>
+              <CoinHead coin={coins[coinKey]} /> 
+            </CoinTile>
+          </Card>
+        </div>
+      );
+    });
+    return (
+      <div className="row">{coinList}</div>
+    );
   }
   else {
     const coinList = filteredCoinKeys.map((coinKey) => {
       return (
-        <CoinTile 
-          chosen={checkInFavorite(coinKey, favorites.favorites.coinKeys)}
-          onClick={() => postFavorite(coinKey)}>
-          <CoinHead coin={coins[coinKey]} />
-        </CoinTile>
+        <div className="col-12 col-md-2" key={coinKey} margin-bottom='20px'>
+          <Card>
+            <CoinTile key={coinKey}
+              chosen={checkInFavorite(coinKey, favorites.favorites.coinKeys)}
+              onClick={() => postFavorite(coinKey)}>
+              <CoinHead coin={coins[coinKey]} />
+            </CoinTile>
+          </Card>
+        </div>
       );
     });
     return (
-      <CoinGrid>{coinList}</CoinGrid>
+      <div className="row">{coinList}</div>
     );
   }
 }
@@ -82,7 +105,6 @@ class Coins extends Component {
       return;
     }
     this.handleFilter(inputValue);
-    console.log('filteredCoinKeys', this.state.filteredCoinKeys);
   }
 
   render(){
@@ -106,11 +128,13 @@ class Coins extends Component {
             <SearchInput onKeyUp={this.filterCoins}/>
           </SearchContainer>
         </div>
+        <div className="row"><hr/></div>
         <div className="row">
           <AllCoinList 
             loading = {this.props.loading}
             favorites = {this.props.favorites}
             coins = {this.props.coins}
+            isAuthenticated = {this.props.isAuthenticated}
             postFavorite = {this.props.postFavorite}
             filteredCoinKeys = {this.state.filteredCoinKeys}
           />

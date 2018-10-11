@@ -20,8 +20,6 @@ const mapStateToProps = state => {
   }
 }
 
-
-
 const mapDispatchToProps = dispatch => ({
   signupUser: (creds) => dispatch(signupUser(creds)),
   loginUser: (creds) => dispatch(loginUser(creds)),
@@ -36,13 +34,16 @@ class Main extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      coinList: []
+      coinList: [],
+      prices: null
     };
   }
 
   componentDidMount() {
     this.fetchCoins();
-    this.props.fetchFavorites();
+    this.props.fetchFavorites().then((favorites) => {
+      this.fetchPrices(favorites.payload.coinKeys);
+    })
   }
 
   fetchCoins = async () => {
@@ -50,13 +51,26 @@ class Main extends Component {
     this.setState({ coinList : coinList });
   }
 
-  render() {
-    const HomePage = () => {
-      return (
-        <Home/>
-      );
-    }
+  fetchPrices = async (favoriteCoinKeys) => {
+    if (!this.props.auth.isAuthenticated) return;
+    let prices = await this.prices(favoriteCoinKeys);
+    this.setState({ prices : prices });
+  }
 
+  prices = async (favoriteCoinKeys) => {
+    let returnData = {};
+    for (let i = 0; i < favoriteCoinKeys.length; i++) {
+      try {
+        let priceData = await cc.priceFull(favoriteCoinKeys[i], 'USD');
+        returnData[favoriteCoinKeys[i]] = priceData[favoriteCoinKeys[i]]['USD'];
+      } catch (e) {
+        console.warn('Fetch price error: ', e);
+      }
+    }
+    return returnData;
+  };
+
+  render() {
     const CoinsPage = () => {
       return (
         <Coins
@@ -75,6 +89,11 @@ class Main extends Component {
     const DashboardPage = () => {
       return (
         <Dashboard
+          loading = {this.state.coinList.length === 0  || !this.state.prices? true : false }
+          coins = {this.state.coinList}
+
+          favorites = {this.props.auth.isAuthenticated ? this.props.favorites : []}
+          prices = {this.state.prices}
         />
       );
     }
@@ -90,7 +109,7 @@ class Main extends Component {
         <TransitionGroup>
           <CSSTransition key={this.props.location.key} classNames="page" timeout={250}>
             <Switch location={this.props.location}>
-              <Route path='/home' component={CoinsPage} />
+              <Route path='/home' component={Home} />
               <Route path='/coins' component={CoinsPage} />
               <Route path='/dashboard' component={DashboardPage} />
               <Redirect to='/home' />
