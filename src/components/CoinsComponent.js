@@ -113,12 +113,10 @@ class Coins extends Component {
       <div className="container2">
         {
           this.props.isAuthenticated ? 
-          <div className="row"> 
-            <FavoritesCoinList 
-              favorites={this.props.favorites} 
-              coins={this.props.coins} 
-              deleteFavorite={this.props.deleteFavorite} />
-          </div>
+          <FavoritesCoinList 
+            favorites={this.props.favorites} 
+            coins={this.props.coins} 
+            deleteFavorite={this.props.deleteFavorite} />
           :
           <div/>
         }

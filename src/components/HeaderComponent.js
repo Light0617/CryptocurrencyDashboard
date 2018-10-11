@@ -6,7 +6,9 @@ import {
   Modal, ModalHeader, ModalBody,
   Form, FormGroup, Input, Label
 } from 'reactstrap';
+import { Route } from 'react-router-dom'
 import React, { Component } from 'react';
+import { withRouter } from "react-router-dom";
 
 class Header extends Component{ 
   constructor(props) {
@@ -52,6 +54,7 @@ class Header extends Component{
 
   handleLogout() {
     this.props.logoutUser();
+    this.props.history.push("/home");
   }
 
   render(){
@@ -142,4 +145,4 @@ class Header extends Component{
   }
 };
 
-export default Header;
+export default withRouter(Header);
