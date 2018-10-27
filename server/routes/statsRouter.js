@@ -12,8 +12,8 @@ router.use(bodyParser.json());
 router.route('/')
 .options(cors.corsWithOptions, (req, res) => {res.sendStatus(200)})
 .get(cors.cors, (req, res, next) => {
-  const query = 'select * from coins where id = ?';
-  client.execute(query, [ '1' ])
+  const query = 'select * from coins';
+  client.execute(query)
     .then((result) => {
       if(result.rows.length === 0) {
         res.statusCode = 404;
@@ -21,10 +21,9 @@ router.route('/')
         res.end('NOT FOUND');
         return 
       }
-      console.log('res', result.rows[0]);
       res.statusCode = 200;
       res.setHeader('Content-Type', 'application/json');
-      res.json(result.rows[0]);
+      res.json(result.rows);
     });
 })
 .put(cors.cors, (req, res, next) => {

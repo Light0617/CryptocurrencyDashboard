@@ -11,13 +11,15 @@ import Dashboard from './DashboardComponent';
 import { loginUser, logoutUser, signupUser, checkLogin } from '../redux/ActionCreators';
 import { fetchFavorites, postFavorite, deleteFavorite } from '../redux/Actions/Favorites.js';
 import { fetchCoins } from '../redux/Actions/Coins.js';
+import { fetchVolatility } from '../redux/Actions/Volatility.js';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 
 const mapStateToProps = state => {
   return {
     auth: state.auth,
     favorites: state.favorites,
-    coins: state.coins
+    coins: state.coins,
+    volatility: state.volatility
   }
 }
 
@@ -30,15 +32,13 @@ const mapDispatchToProps = dispatch => ({
   fetchFavorites: () => dispatch(fetchFavorites()),
   postFavorite: (coinKey) => dispatch(postFavorite(coinKey)),
   deleteFavorite: (coinKey) => dispatch(deleteFavorite(coinKey)),
-  fetchCoins: () => dispatch(fetchCoins())
+  fetchCoins: () => dispatch(fetchCoins()),
+  fetchVolatility: () => dispatch(fetchVolatility())
 });
 
 class Main extends Component { 
   constructor(props) {
     super(props);
-    this.state = {
-      coinList: []
-    };
   }
 
   componentDidMount() {
@@ -46,6 +46,7 @@ class Main extends Component {
     console.log('check', this.props.checkLogin());
     this.props.auth.isAuthenticated = this.props.checkLogin();
     this.props.fetchFavorites();
+    this.props.fetchVolatility();
   }
 
   render() {
@@ -68,10 +69,11 @@ class Main extends Component {
 
       return (
         <Dashboard
-          loading = {this.props.favorites.isLoading || this.props.coins.isLoading }
+          loading = {this.props.favorites.isLoading || this.props.coins.isLoading || this.props.volatility.isLoading}
           coins = {this.props.coins.coins}
 
           favorites = {this.props.auth.isAuthenticated ? this.props.favorites.favorites : []}
+          volatility = {this.props.volatility.volatility ? this.props.volatility.volatility : []}
         />
       );
     }

@@ -29,7 +29,7 @@ app.get('/', (req, res) => {
 
 app.use('/users', userRouter);
 app.use('/favorites', favoriteRouter);
-app.use('/stats', statsRouter);
+app.use('/stats/volatility', statsRouter);
 
 
 app.get('*', (req, res) => {

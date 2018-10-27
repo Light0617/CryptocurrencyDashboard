@@ -6,8 +6,8 @@ import CoinPriceHead from './Unit/CoinPriceHeadComponent';
 import CoinBigPic from './Unit/CoinBigPicComponent';
 import HistoricalChart from './HistoricalChartComponent';
 
-function FavoritesCoinList({favorites, coins, prices, updateKey}) {
-  if(!favorites.coinKeys || coins.length === 0 || prices.length === 0) {
+function FavoritesCoinList({favorites, coins, prices, updateKey, volatility}) {
+  if(!favorites.coinKeys || coins.length === 0 || prices.length === 0 || volatility.length === 0) {
     return ( <Loading/> );
   } else{
     const keys = favorites.coinKeys;
@@ -20,7 +20,7 @@ function FavoritesCoinList({favorites, coins, prices, updateKey}) {
             <CoinTile>
               <CoinPriceHead 
                 coin={coins[coinKey]} 
-                change={prices[coinKey]['CHANGE24HOUR']}
+                change={volatility[coinKey]}
                 price={prices[coinKey]['PRICE']} />
             </CoinTile>
           </Card>
@@ -43,7 +43,9 @@ class DashBoard extends Component{
         !this.props.loading && this.props.favorites && this.props.favorites.coinKeys.length > 0 ? 
         this.props.favorites.coinKeys[0] : -1
     };
-    this.updateKey = this.updateKey.bind(this)
+    this.updateKey = this.updateKey.bind(this);
+    this.fetchPrices = this.fetchPrices.bind(this);
+    this.getPrices = this.getPrices.bind(this);
   }
   updateKey(coinKey) {
     this.setState({
@@ -55,11 +57,11 @@ class DashBoard extends Component{
     if (this.props.favorites)
       this.fetchPrices(this.props.favorites.coinKeys)
   }
+
   fetchPrices = async (favoriteCoinKeys) => {
     let prices = await this.getPrices(favoriteCoinKeys);
     this.setState({ prices : prices });
   }
-
   getPrices = async (favoriteCoinKeys) => {
     let returnData = {};
     for (let i = 0; i < favoriteCoinKeys.length; i++) {
@@ -85,6 +87,10 @@ class DashBoard extends Component{
               coins={this.props.coins}
               prices={this.state.prices}
               updateKey = {this.updateKey}
+              volatility = {this.props.volatility.reduce(function(map, obj) {
+                map[obj.id] = obj.volatility;
+                return map;
+                }, {})}
             />
           :
           <Loading/>
