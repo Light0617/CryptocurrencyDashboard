@@ -7,6 +7,7 @@ const config = require('./config');
 
 const userRouter = require('./routes/userRouter');
 const favoriteRouter = require('./routes/favoriteRouter');
+const statsRouter = require('./routes/statsRouter');
 
 const app = express();
 
@@ -28,6 +29,7 @@ app.get('/', (req, res) => {
 
 app.use('/users', userRouter);
 app.use('/favorites', favoriteRouter);
+app.use('/stats', statsRouter);
 
 
 app.get('*', (req, res) => {
