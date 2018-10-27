@@ -8,15 +8,16 @@ import Home from './HomeComponent';
 import Coins from './CoinsComponent';
 import Dashboard from './DashboardComponent';
 
-import { loginUser, logoutUser, signupUser } from '../redux/ActionCreators';
+import { loginUser, logoutUser, signupUser, checkLogin } from '../redux/ActionCreators';
 import { fetchFavorites, postFavorite, deleteFavorite } from '../redux/Actions/Favorites.js';
+import { fetchCoins } from '../redux/Actions/Coins.js';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
-const cc = require('cryptocompare');
 
 const mapStateToProps = state => {
   return {
     auth: state.auth,
     favorites: state.favorites,
+    coins: state.coins
   }
 }
 
@@ -24,76 +25,53 @@ const mapDispatchToProps = dispatch => ({
   signupUser: (creds) => dispatch(signupUser(creds)),
   loginUser: (creds) => dispatch(loginUser(creds)),
   logoutUser: () => dispatch(logoutUser()),
+  checkLogin: () => dispatch(checkLogin()),
 
   fetchFavorites: () => dispatch(fetchFavorites()),
   postFavorite: (coinKey) => dispatch(postFavorite(coinKey)),
-  deleteFavorite: (coinKey) => dispatch(deleteFavorite(coinKey))
+  deleteFavorite: (coinKey) => dispatch(deleteFavorite(coinKey)),
+  fetchCoins: () => dispatch(fetchCoins())
 });
 
 class Main extends Component { 
   constructor(props) {
     super(props);
     this.state = {
-      coinList: [],
-      prices: null
+      coinList: []
     };
   }
 
   componentDidMount() {
-    this.fetchCoins();
-    this.props.fetchFavorites().then((favorites) => {
-      this.fetchPrices(favorites.payload.coinKeys);
-    })
+    this.props.fetchCoins();
+    console.log('check', this.props.checkLogin());
+    this.props.auth.isAuthenticated = this.props.checkLogin();
+    this.props.fetchFavorites();
   }
-
-  fetchCoins = async () => {
-    let coinList = (await cc.coinList()).Data;
-    this.setState({ coinList : coinList });
-  }
-
-  fetchPrices = async (favoriteCoinKeys) => {
-    if (!this.props.auth.isAuthenticated) return;
-    let prices = await this.prices(favoriteCoinKeys);
-    this.setState({ prices : prices });
-  }
-
-  prices = async (favoriteCoinKeys) => {
-    let returnData = {};
-    for (let i = 0; i < favoriteCoinKeys.length; i++) {
-      try {
-        let priceData = await cc.priceFull(favoriteCoinKeys[i], 'USD');
-        returnData[favoriteCoinKeys[i]] = priceData[favoriteCoinKeys[i]]['USD'];
-      } catch (e) {
-        console.warn('Fetch price error: ', e);
-      }
-    }
-    return returnData;
-  };
 
   render() {
     const CoinsPage = () => {
       return (
         <Coins
-          loading = {this.state.coinList.length === 0 ? true : false }
-          coinKeys = {Object.keys(this.state.coinList).slice(0, 100)}
-          coins = {this.state.coinList}
+          loading = {this.props.coins.isLoading}
+          coinKeys = {this.props.coins.coins ? Object.keys(this.props.coins.coins).slice(0, 100) : []}
+          coins = {this.props.coins.coins}
 
           isAuthenticated = {this.props.auth.isAuthenticated}
-          postFavorite={this.props.postFavorite}
           favorites={this.props.auth.isAuthenticated ? this.props.favorites : []}
+          postFavorite={this.props.postFavorite}
           deleteFavorite={this.props.deleteFavorite}
         />
       );
     }
 
     const DashboardPage = () => {
+
       return (
         <Dashboard
-          loading = {this.state.coinList.length === 0  || !this.state.prices? true : false }
-          coins = {this.state.coinList}
+          loading = {this.props.favorites.isLoading || this.props.coins.isLoading }
+          coins = {this.props.coins.coins}
 
-          favorites = {this.props.auth.isAuthenticated ? this.props.favorites : []}
-          prices = {this.state.prices}
+          favorites = {this.props.auth.isAuthenticated ? this.props.favorites.favorites : []}
         />
       );
     }
@@ -111,7 +89,7 @@ class Main extends Component {
             <Switch location={this.props.location}>
               <Route path='/home' component={Home} />
               <Route path='/coins' component={CoinsPage} />
-              <Route path='/dashboard' component={DashboardPage} />
+              <Route path='/dashboard' component={this.props.auth.isAuthenticated ? DashboardPage : Home} />
               <Redirect to='/home' />
             </Switch>
           </CSSTransition>

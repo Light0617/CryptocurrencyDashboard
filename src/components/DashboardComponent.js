@@ -7,10 +7,10 @@ import CoinBigPic from './Unit/CoinBigPicComponent';
 import HistoricalChart from './HistoricalChartComponent';
 
 function FavoritesCoinList({favorites, coins, prices, updateKey}) {
-  if(!favorites || favorites.isLoading || !coins || coins.length === 0 || favorites.favorites == null || !prices) {
+  if(!favorites.coinKeys || coins.length === 0 || prices.length === 0) {
     return ( <Loading/> );
   } else{
-    const keys = favorites.favorites.coinKeys;
+    const keys = favorites.coinKeys;
     const coinList = keys.map((coinKey) => {
       return (
         <div className="col-12 col-md-2" key={coinKey} margin-bottom='20px'
@@ -33,13 +33,15 @@ function FavoritesCoinList({favorites, coins, prices, updateKey}) {
   }
 }
 
+const cc = require('cryptocompare');
 class DashBoard extends Component{ 
   constructor(props) {
     super(props);
     this.state = {
+      prices : [],
       currentKey: 
-        !this.props.loading && this.props.favorites.favorites && this.props.favorites.favorites.coinKeys.length > 0 ? 
-        this.props.favorites.favorites.coinKeys[0] : -1
+        !this.props.loading && this.props.favorites && this.props.favorites.coinKeys.length > 0 ? 
+        this.props.favorites.coinKeys[0] : -1
     };
     this.updateKey = this.updateKey.bind(this)
   }
@@ -49,34 +51,61 @@ class DashBoard extends Component{
     });
   }
 
+  componentDidMount() {
+    if (this.props.favorites)
+      this.fetchPrices(this.props.favorites.coinKeys)
+  }
+  fetchPrices = async (favoriteCoinKeys) => {
+    let prices = await this.getPrices(favoriteCoinKeys);
+    this.setState({ prices : prices });
+  }
+
+  getPrices = async (favoriteCoinKeys) => {
+    let returnData = {};
+    for (let i = 0; i < favoriteCoinKeys.length; i++) {
+      try {
+        let priceData = await cc.priceFull(favoriteCoinKeys[i], 'USD');
+        returnData[favoriteCoinKeys[i]] = priceData[favoriteCoinKeys[i]]['USD'];
+      } catch (e) {
+        console.warn('Fetch price error: ', e);
+      }
+    }
+    return returnData;
+  };
+
+
   render() {
     return (
       <div className="container2">
         <div className="row"> <h1>Dashboard</h1></div>
-        <div className="row"> 
-          <FavoritesCoinList 
-            favorites={this.props.favorites} 
-            coins={this.props.coins}
-            prices={this.props.prices}
-            updateKey = {this.updateKey}
+        {
+          !this.props.loading ? 
+            <FavoritesCoinList 
+              favorites={this.props.favorites} 
+              coins={this.props.coins}
+              prices={this.state.prices}
+              updateKey = {this.updateKey}
             />
-        </div>
+          :
+          <Loading/>
+        }
         <div className="row"><hr/></div>
-        <div className="row">
-          <div className="col-sm-4">
-            {this.state.currentKey !== -1 ? 
-              <CoinBigPic currentCoin = {this.props.coins[this.state.currentKey]}/> 
-              : 
-              <Loading/>
-            }
-          </div>
-          <div className="col-sm-8">
-            <HistoricalChart
-              coins = {this.props.coins}
-              currentKey = {this.state.currentKey}
-            />
-          </div>
-        </div>
+          {
+            this.state.currentKey !== -1 && !this.props.loading ? 
+              <div className="row">
+                <div className="col-sm-4">
+                  <CoinBigPic currentCoin = {this.props.coins[this.state.currentKey]}/> 
+                </div>
+                <div className="col-sm-8">
+                  <HistoricalChart
+                    coins = {this.props.coins}
+                    currentKey = {this.state.currentKey}
+                  />
+                </div>
+              </div>
+            :
+            <Loading/>
+          }
       </div>
     );
   }

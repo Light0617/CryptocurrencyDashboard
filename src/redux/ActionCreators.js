@@ -2,6 +2,12 @@ import * as ActionTypes from './ActionTypes';
 import { baseUrl } from '../shared/baseUrl';
 import {fetchFavorites, favoritesFailed} from './Actions/Favorites.js';
 
+
+const getExpiredDate = (second) => {
+  const now = new Date();
+  return new Date(now.getTime() + second * 1000);
+}
+
 /**
  * Signup
  * 
@@ -53,11 +59,9 @@ export const signupUser = (creds) => (dispatch) => {
     if(response.success){
       console.log('Sign Up Succeed!');
       const userInfo = {username: creds.username, password: creds.password};
-      console.log('creds= ' + JSON.stringify(creds));
-      console.log('userInfo= ' + JSON.stringify(userInfo));
-      console.log('response= ' + JSON.stringify(response));
       localStorage.setItem('token', response.token);
       localStorage.setItem('creds', JSON.stringify(userInfo));
+      localStorage.setItem('expirationDate', getExpiredDate(20*60));
       dispatch(receiveSignup(response));
       dispatch(fetchFavorites());
     } else {
@@ -122,6 +126,7 @@ export const loginUser = (creds) => (dispatch) => {
       // If login was successful, set the token in local storage
       localStorage.setItem('token', response.token);
       localStorage.setItem('creds', JSON.stringify(creds));
+      localStorage.setItem('expirationDate', getExpiredDate(20*60));
       // Dispatch the success action
       dispatch(receiveLogin(response));
       dispatch(fetchFavorites());
@@ -150,10 +155,27 @@ export const receiveLogout = () => {
   }
 }
 
+/**
+ * Auto Logout
+ * 
+ */
+export const checkLogin = () => (dispatch) => {
+  const expirationDate = new Date(localStorage.getItem('expirationDate')).getTime();
+  const nowTime = (new Date()).getTime();
+  if(nowTime < expirationDate){
+    return true
+  } else {
+    dispatch(logoutUser())
+    return false
+  }
+}
+
 export const logoutUser = () => (dispatch) => {
   dispatch(requestLogout());
   localStorage.removeItem('token');
   localStorage.removeItem('creds');
+  localStorage.removeItem('cryptoDash');
+  localStorage.removeItem('expirationDate');
   dispatch(receiveLogout());
   dispatch(favoritesFailed('Error 401: Unauthorized'));
 }

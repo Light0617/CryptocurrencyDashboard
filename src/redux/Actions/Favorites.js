@@ -84,8 +84,12 @@ export const deleteFavorite = (coinKey) => (dispatch) => {
 }
 
 export const fetchFavorites = () => (dispatch) => {
+  const token = localStorage.getItem('token');
+  console.log('token', token)
+  if(!token) {
+    dispatch(addFavorites([]))
+  }
   dispatch(favoritesLoading(true));
-
   const bearer = 'Bearer ' + localStorage.getItem('token');
 
   return fetch(baseUrl + 'favorites/', {

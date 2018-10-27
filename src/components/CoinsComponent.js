@@ -108,7 +108,6 @@ class Coins extends Component {
   }
 
   render(){
-
     return (
       <div className="container2">
         {
