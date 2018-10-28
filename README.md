@@ -8,7 +8,8 @@
 ## How to run it
 - in terminal 1, launch mongoDB
 - in terminal 2, launch server (node server/app.js)
-- in terminal 3, launch client
+- in terminal 3, launch client (./serve/bin/serve.js -s build)
+
 
 ## Demo
 ![demo cover](./demo/demo.png)
