@@ -10,6 +10,7 @@ function FavoritesCoinList({favorites, coins, prices, updateKey, volatility}) {
   if(!favorites.coinKeys || coins.length === 0 || prices.length === 0 || volatility.length === 0) {
     return ( <Loading/> );
   } else{
+    console.log('prices', prices);
     const keys = favorites.coinKeys;
     const coinList = keys.map((coinKey) => {
       return (
@@ -20,7 +21,9 @@ function FavoritesCoinList({favorites, coins, prices, updateKey, volatility}) {
             <CoinTile>
               <CoinPriceHead 
                 coin={coins[coinKey]} 
-                change={volatility[coinKey]}
+                change={
+                  volatility.hasOwnProperty(coinKey) ? volatility[coinKey] : prices[coinKey]['CHANGE24HOUR']
+                }
                 price={prices[coinKey]['PRICE']} />
             </CoinTile>
           </Card>
