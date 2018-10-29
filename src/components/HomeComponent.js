@@ -24,7 +24,7 @@ function Home(props) {
         <div className="col-sm-10">
           <Card style={{ backgroundColor: '#aaaaaa' }}>
             <CardTitle>DataFlow</CardTitle>
-            <img src='demo1.png' alt='dashboard' height='500px'/>
+            <img src='flow.jpeg' alt='dashboard' height='500px'/>
           </Card>
         </div>
       </div>
