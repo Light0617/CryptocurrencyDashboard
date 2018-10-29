@@ -1,0 +1,6 @@
+[submodule "kafaka/CryptocurrencyKafkaStreaming"]
+	path = kafaka/CryptocurrencyKafkaStreaming
+	url = git@github.com:Light0617/CryptocurrencyKafkaStreaming.git
+[submodule "kafka/CryptocurrencyKafkaStreaming"]
+	path = kafka/CryptocurrencyKafkaStreaming
+	url = git@github.com:Light0617/CryptocurrencyKafkaStreaming.git
