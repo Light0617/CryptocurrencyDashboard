@@ -16,9 +16,9 @@
 - in terminal 2, launch Cassandra
 - in terminal 3, launch zookeeper server
 - in terminal 4, launch kafka server
-- run kafka/CryptocurrencyKafkaStreaming/src/main/java/cryptocurrency/kafka/CoinProducer.java
-- run kafka/CryptocurrencyKafkaStreaming/src/main/java/cryptocurrency/kafka/CoinConsumer.java
-- run kafka/CryptocurrencyKafkaStreaming/src/main/java/cryptocurrency/kafka/CoinVolatility.java
+- run CryptocurrencyKafkaStreaming/src/main/java/cryptocurrency/kafka/CoinProducer.java
+- run CryptocurrencyKafkaStreaming/src/main/java/cryptocurrency/kafka/CoinConsumer.java
+- run CryptocurrencyKafkaStreaming/src/main/java/cryptocurrency/kafka/CoinVolatility.java
 - in terminal 5, launch server (node server/app.js)
 - in terminal 6, launch client (./serve/bin/serve.js -s build)
 
