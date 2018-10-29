@@ -22,8 +22,7 @@
 - in terminal 5, launch server (node server/app.js)
 - in terminal 6, launch client (./serve/bin/serve.js -s build)
 
-## DEMO
-### Cover 
+## Data Flow
+![demo cover](./demo/flow.jpeg)
+## DEMO 
 ![demo cover](./demo/demo.png)
-### Data Flow
-![demo cover](./demo/demo2.jpeg)
