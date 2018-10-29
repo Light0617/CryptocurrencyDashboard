@@ -26,4 +26,4 @@
 ### Cover 
 ![demo cover](./demo/demo.png)
 ### Data Flow
-![demo cover](./demo/demo2.png)
+![demo cover](./demo/demo2.jpeg)
